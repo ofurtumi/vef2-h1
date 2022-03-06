@@ -1,7 +1,6 @@
 # skipulag á mögulegum aðgerðum
 
 ## /menu
----
 
 ### /
 * **GET** - list of menuitems, newest first
@@ -37,7 +36,6 @@
 ~~~
 
 ## /categories
----
 
 ### /
 * **GET** - list of categories
@@ -57,3 +55,60 @@
 /categories/1?method=patch&title=patchedcategory
 ~~~
 
+## /cart
+
+### /:cartid
+* **GET** - shows cart with the corresponding id and calculated sum price
+* **DELETE** - deletes cart with the corresponding id, happens automatically when order is created
+* **POST** - adds a cartline to cart with the corresponding id 
+*usage*
+~~~
+/cart/th1si54d3m0c4rt?method=delete
+
+/cart/th1si54d3m0c4rt?method=post&item=1&cart=th1si54d3m0c4rt&num=3
+~~~
+
+### /:cartid/line/:id
+* **GET** - shows cartline where menuitem has :id and how many of the item there are
+* **DELETE** - deletes cartline where menuitem has :id
+* **PATCH** - updates number of items in cartline where menuitem has :id
+*usage*
+~~~
+/cart/th1si54d3m0c4rt/line/1?method=delete
+
+/cart/th1si54d3m0c4rt/line/1?method=patch&num=10
+~~~
+
+## /orders
+
+### /
+* **GET** - lists all orders if user is admin
+* **POST** - creates a new order, returns orderstatus and id of order
+*usage*
+~~~
+/orders?method=post&id=th1si54d3m0c4rt&name=demoUser
+~~~
+
+### /:id
+* **GET** - lists all orderlines of order with the corresponding
+
+### /:id/status
+* **GET** - shows order same as /:id with the addition of showing the orders status
+* **PATCH** - updates order status if user is admin, can only go forward
+*usage*
+~~~
+/orders/1/status?method=patch
+~~~
+
+## /users
+
+### /
+* **GET** - shows a list of all users, only if user is admin
+
+### /:id
+* **GET** - returns user with the corresponding id, only if user is admin
+* **PATCH** - updates the admin status of a user with corresponding id, can only be user if user is admin
+*usage*
+~~~
+/users/1?method=patch&admin=true
+~~~

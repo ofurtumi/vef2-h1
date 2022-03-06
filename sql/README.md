@@ -1,7 +1,6 @@
 # gagnagrunns uppsetning
 
 ## menu
----
 
 ### category
 * id, unique
@@ -18,7 +17,6 @@
 * updated, date
 
 ## cart
----
 
 ### cart
 * id, string, uuid
@@ -30,7 +28,6 @@
 * num, int > 0
 
 ## order
----
 
 ### order
 * id, string, uuid
@@ -39,7 +36,7 @@
 
 ### orderline
 * item, foreignkey, *menuitem*
-* cart, foreignkey, *cart*
+* order, foreignkey, *order*
 * num, int > 0
 
 ### orderstatus
