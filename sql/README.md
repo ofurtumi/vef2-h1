@@ -2,17 +2,17 @@
 
 ## menu
 
-### category
+### categories
 * id, unique
 * title, varchar, unique, not null
 
-### menuitem 
+### menuitems
 * id, unique
 * title, varchar, unique, not null
 * price, integer, required
 * description, text, required
 * image, text, required
-* category, foreignkey *category*
+* category, foreignkey *categories*
 * created, date
 * updated, date
 
@@ -24,19 +24,19 @@
 
 ### cartline
 * item, foreignkey, *menuitem*
-* cart, foreignkey, *cart*
+* cartid, foreignkey, *cart*
 * num, int > 0
 
 ## order
 
-### order
+### orders
 * id, string, uuid
 * created, date
 * name, string, required
 
 ### orderline
 * item, foreignkey, *menuitem*
-* order, foreignkey, *order*
+* orderid, foreignkey, *order*
 * num, int > 0
 
 ### orderstatus
