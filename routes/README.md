@@ -112,3 +112,17 @@
 ~~~
 /users/1?method=patch&admin=true
 ~~~
+
+### /register
+* **POST** - creates a new user, new user is never admin
+*usage*
+~~~
+/users/register?method=post&email=test@test.com&name=Testman&password=hashedpass
+~~~
+
+### /login
+* **POST** - signs user in if everything fits
+*usage*
+~~~
+/users/login?method=post&email=test@test.com&password=hashedpass
+~~~
