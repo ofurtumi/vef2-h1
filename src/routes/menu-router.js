@@ -1,7 +1,7 @@
 import express from 'express';
 import { validationResult } from 'express-validator';
 import { catchErrors } from '../lib/catch-errors.js';
-import { query } from '../lib/db.js';
+import { insertMenuItem, query } from '../lib/db.js';
 
 export const menuRouter = express.Router();
 
@@ -58,23 +58,21 @@ async function showMenu(req, res) {
 	}
 }
 
-function newMenuItem() {}
-
-function showCategory(req, res) {
-	const { body } = req.body;
-	console.log('body --> ', body);
+async function newMenuItem(req, res) {
+    const { title, price, description, image, categoryid } = req.body;
+	const values = [title,price,description,image,categoryid];
+	
+	let success = await insertMenuItem(values);
+	
+	res.send({'result':success})
 }
-
-function searchMenu() {}
 
 function showMenuItem() {}
 function deleteMenuItem() {}
 function patchMenuItem() {}
 
-menuRouter.get('/', showMenu);
-// menuRouter.post('/', isAdmin, catchErrors(newMenuItem));
-
-menuRouter.get('/?search', catchErrors(searchMenu));
+menuRouter.post('/', catchErrors(newMenuItem));
+menuRouter.get('/', catchErrors(showMenu));
 
 menuRouter.get('/:id', catchErrors(showMenuItem));
 menuRouter.delete('/:id', catchErrors(deleteMenuItem));

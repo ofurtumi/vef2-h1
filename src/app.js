@@ -6,6 +6,7 @@ import { fileURLToPath } from 'url';
 import { menuRouter } from './routes/menu-router.js';
 import passport from './lib/login.js'
 import { title } from 'process';
+import bodyParser from 'body-parser';
 
 dotenv.config();
 
@@ -42,6 +43,7 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(bodyParser.json())
 
 // app.locals = {
 // 	isInvalid,

@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 const SCHEMA_FILE = './sql/schema.sql';
 const DROP_SCHEMA_FILE = './sql/drop.sql';
 
-dotenv.config()
+dotenv.config();
 
 const { DATABASE_URL: connectionString, NODE_ENV: nodeEnv = 'development' } =
 	process.env;
@@ -58,6 +58,23 @@ export async function dropSchema(dropFile = DROP_SCHEMA_FILE) {
 	const data = await readFile(dropFile);
 
 	return query(data.toString('utf-8'));
+}
+
+export async function insertMenuItem(data) {
+	const exists = await query('select id from menuitems where title = $1', [data[0]])
+	if (exists.rowCount > 0) return 'item already exists, insertion aborted';
+
+	const q = `INSERT INTO menuitems 
+	(title,price,description,image,categoryid) 
+	VALUES ($1,$2,$3,$4,$5) RETURNING *`;
+	try {
+		const queryResult = await query(q,data);
+		if (queryResult.rowCount === 1) return queryResult.rows;
+		else return 'insertion failed'
+	} catch (error) {
+		console.error('Failed to add menuitem', error);
+		return 'insertion failed'
+	}
 }
 
 export async function end() {
