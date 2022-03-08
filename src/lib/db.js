@@ -61,19 +61,38 @@ export async function dropSchema(dropFile = DROP_SCHEMA_FILE) {
 }
 
 export async function insertMenuItem(data) {
-	const exists = await query('select id from menuitems where title = $1', [data[0]])
+	const exists = await query('select id from menuitems where title = $1', [
+		data[0],
+	]);
 	if (exists.rowCount > 0) return 'item already exists, insertion aborted';
 
 	const q = `INSERT INTO menuitems 
 	(title,price,description,image,categoryid) 
 	VALUES ($1,$2,$3,$4,$5) RETURNING *`;
 	try {
-		const queryResult = await query(q,data);
+		const queryResult = await query(q, data);
 		if (queryResult.rowCount === 1) return queryResult.rows;
-		else return 'insertion failed'
+		else return 'insertion failed';
 	} catch (error) {
 		console.error('Failed to add menuitem', error);
-		return 'insertion failed'
+		return 'insertion failed';
+	}
+}
+
+export async function selectItemWithId(id) {
+	const q = 'SELECT * FROM menuitems WHERE id = $1';
+	try {
+		const queryResult = await query(q, [id]);
+		if (queryResult.rowCount === 1)
+			return { exists: true, result: queryResult.rows };
+		else return { exists: false, result: null };
+	} catch (error) {
+		console.error('an error came up', error);
+		return {
+			exists: false,
+			result:
+				'an error came up while getting selecting item with id: ' + id,
+		};
 	}
 }
 

@@ -1,16 +1,9 @@
 import express from 'express';
 import { validationResult } from 'express-validator';
 import { catchErrors } from '../lib/catch-errors.js';
-import { insertMenuItem, query } from '../lib/db.js';
+import { insertMenuItem, query, selectItemWithId } from '../lib/db.js';
 
 export const menuRouter = express.Router();
-
-const menu = {
-	burgers: ['cheeseburger', 'hamburger', 'veganburger', 'meat paradise'],
-	pizzas: ['margherita', 'pepperoni pizza', 'hawaiian', 'meat paradise'],
-	salads: ['ceasar salad', 'chicken salad', 'greek salad', 'meat paradise'],
-	soups: ['good soup', 'french onion soup', 'bean soup', 'meat paradise'],
-};
 
 async function showMenu(req, res) {
 	let category = req.query.category;
@@ -59,21 +52,91 @@ async function showMenu(req, res) {
 }
 
 async function newMenuItem(req, res) {
-    const { title, price, description, image, categoryid } = req.body;
-	const values = [title,price,description,image,categoryid];
-	
+	const { title, price, description, image, categoryid } = req.body;
+	const values = [title, price, description, image, categoryid];
+
 	let success = await insertMenuItem(values);
-	
-	res.send({'result':success})
+
+	res.send({ result: success });
 }
 
-function showMenuItem() {}
-function deleteMenuItem() {}
-function patchMenuItem() {}
+async function showMenuItem(req, res) {
+	const { id } = req.params;
+	const item = await selectItemWithId(id);
+	if (item.exists) res.send(item.result);
+	else res.send({ result: 'item does not exist' });
+}
+
+async function deleteMenuItem(req, res) {
+	const { id } = req.params;
+	const item = await selectItemWithId(id);
+	if (item.exists) {
+		try {
+			const queryResult = await query(
+				'DELETE FROM menuitems WHERE id = $1 RETURNING *',
+				[id]
+			);
+			res.send({
+				result: 'successfully deleted',
+				item: queryResult.rows[0].title,
+			});
+		} catch (error) {
+			console.error('failed to delete item??', error);
+			res.send({ result: 'error, failed to delete item' });
+		}
+	} else {
+		res.send({
+			result: 'item with id:' + id + ' does not exist, cannot delete',
+		});
+	}
+}
+async function patchMenuItem(req,res) {
+	const { id } = req.params;
+	const { title="", price="", description="", image="", categoryid="" } = req.body;
+	let q = 'UPDATE menuitems SET '
+
+	let counter = 1;
+	let values = [];
+
+	if (title) {
+		q += 'title = $'+ counter++ +', ';
+		values.push(title);
+	}
+	if (price) {
+		q += 'price = $'+ counter++ +', ';
+		values.push(price);
+	}
+	if (description) {
+		q += 'description = $'+ counter++ +', ';
+		values.push(description);
+	}
+	if (image) {
+		q += 'image = $'+ counter++ +', ';
+		values.push(image);
+	}
+	if (categoryid) {
+		q += 'categoryid = $'+ counter++ +', ';
+		values.push(categoryid);
+	}
+
+	q = q.substring(0,q.length-2);
+	q += ' WHERE id = $'+counter+' RETURNING *';
+	values.push(id);
+
+	try {
+		const queryResult = await query(q,values);
+		if (queryResult.rowCount === 1) res.send(queryResult.rows);
+		else res.send({result:'could not patch item'})
+
+	} catch (error) {
+		console.error('error came up while trying to patch item with id: '+ id);
+		res.send({result:'error while trying to patch item'})
+	}
+}
 
 menuRouter.post('/', catchErrors(newMenuItem));
 menuRouter.get('/', catchErrors(showMenu));
 
 menuRouter.get('/:id', catchErrors(showMenuItem));
 menuRouter.delete('/:id', catchErrors(deleteMenuItem));
-menuRouter.patch('/:id', catchErrors(patchMenuItem));
+menuRouter.patch('/:id', patchMenuItem);
