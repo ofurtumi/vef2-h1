@@ -7,6 +7,7 @@ import { menuRouter } from './routes/menu-router.js';
 import passport from './lib/login.js'
 import { title } from 'process';
 import bodyParser from 'body-parser';
+import { categoryRouter } from './routes/category-router.js';
 
 dotenv.config();
 
@@ -50,6 +51,7 @@ app.use(bodyParser.json())
 // };
 
 app.use('/menu', menuRouter);
+app.use('/categories', categoryRouter);
 app.use('/',(req,res)=>{
 	res.status(201).send({'Title':'Forsíða'})
 })

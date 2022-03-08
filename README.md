@@ -35,3 +35,13 @@ curl -X DELETE localhost:6969/menu/1
 ~~~
 curl -X PATCH localhost:6969/menu/8 -H "Content-Type: application/json" -d '{"title":"meat hell pizza", "description": "for people who hate meat, and themselves","price":9999}'
 ~~~
+
+**til að sækja lista af flokkum**
+~~~
+curl localhost:6969/categories
+~~~
+
+**til að bæta við flokk**
+~~~
+curl -X POST localhost:6969/categories -H "Content-Type: application/json" -d '{"title":"demo category"}'
+~~~

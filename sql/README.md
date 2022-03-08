@@ -3,7 +3,7 @@
 ## menu
 
 ### categories
-* id, unique
+* id, varchar, unique
 * title, varchar, unique, not null
 
 ### menuitems
