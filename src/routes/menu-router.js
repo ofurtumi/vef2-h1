@@ -13,14 +13,14 @@ async function showMenu(req, res) {
 	if (category) {
 		try {
 			const catid = await query(
-				'SELECT id FROM categories WHERE title = $1',
+				'SELECT cat_id FROM categories WHERE title = $1',
 				[category]
 			);
 			if (catid.rowCount !== 1) {
 				res.send({ result: 'Engin vara á matseðli í þessum flokki' });
 			} else {
 				const q = 'SELECT * FROM menuitems WHERE categoryid = $1';
-				const val = [catid.rows[0].id];
+				const val = [catid.rows[0].cat_id];
 				const queryResult = await query(q, val);
 				output = queryResult.rows;
 			}

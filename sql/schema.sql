@@ -1,6 +1,9 @@
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 CREATE TABLE categories (
-    id SERIAL UNIQUE,
-    title VARCHAR NOT NULL UNIQUE
+    cat_id uuid DEFAULT uuid_generate_v4 (),
+    title VARCHAR NOT NULL UNIQUE,
+    PRIMARY KEY (cat_id)
 );
 
 CREATE TABLE menuitems (
@@ -9,9 +12,9 @@ CREATE TABLE menuitems (
     price INT NOT NULL,
     description TEXT NOT NULL,
     image TEXT NOT NULL,
-    categoryid SERIAL NOT NULL,
+    categoryid uuid,
     created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
-    CONSTRAINT categoryid FOREIGN KEY (categoryid) REFERENCES categories (id)
+    CONSTRAINT categoryid FOREIGN KEY (categoryid) REFERENCES categories (cat_id)
 );
 
 CREATE TABLE cart (
