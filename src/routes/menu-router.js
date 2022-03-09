@@ -1,7 +1,7 @@
 import express from 'express';
 import { validationResult } from 'express-validator';
 import { catchErrors } from '../lib/catch-errors.js';
-import { insertMenuItem, query, selectItemWithId } from '../lib/db.js';
+import { doesExistItem, insertMenuItem, query, selectItemWithId } from '../lib/db.js';
 
 export const menuRouter = express.Router();
 
@@ -63,7 +63,7 @@ async function newMenuItem(req, res) {
 async function showMenuItem(req, res) {
 	const { id } = req.params;
 	const item = await selectItemWithId(id);
-	if (item.exists) res.send(item.result);
+	if (item) res.send(item);
 	else res.send({ result: 'item does not exist' });
 }
 
@@ -134,7 +134,7 @@ async function patchMenuItem(req,res) {
 	}
 }
 
-menuRouter.post('/', catchErrors(newMenuItem));
+menuRouter.post('/', doesExistItem, catchErrors(newMenuItem));
 menuRouter.get('/', catchErrors(showMenu));
 
 menuRouter.get('/:id', catchErrors(showMenuItem));

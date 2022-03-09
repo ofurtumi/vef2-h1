@@ -6,7 +6,9 @@
   "type": "module",
   "scripts": {
     "dev": "dotenv -e .env -- nodemon ./src/app.js",
-    "build": "node ./src/setup.js"
+    "build": "dotenv -e .env node ./src/setup.js",
+    "start": "dotenv -e .env node ./src/app.js"
+
   },
   "repository": {
     "type": "git",

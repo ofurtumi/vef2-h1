@@ -61,11 +61,6 @@ export async function dropSchema(dropFile = DROP_SCHEMA_FILE) {
 }
 
 export async function insertMenuItem(data) {
-	const exists = await query('select id from menuitems where title = $1', [
-		data[0],
-	]);
-	if (exists.rowCount > 0) return 'item already exists, insertion aborted';
-
 	const q = `INSERT INTO menuitems 
 	(title,price,description,image,categoryid) 
 	VALUES ($1,$2,$3,$4,$5) RETURNING *`;
@@ -84,15 +79,77 @@ export async function selectItemWithId(id) {
 	try {
 		const queryResult = await query(q, [id]);
 		if (queryResult.rowCount === 1)
-			return { exists: true, result: queryResult.rows };
-		else return { exists: false, result: null };
+			return queryResult.rows;
+		else return null;
 	} catch (error) {
 		console.error('an error came up', error);
-		return {
-			exists: false,
-			result:
-				'an error came up while getting selecting item with id: ' + id,
-		};
+		return null;
+	}
+}
+
+export async function doesExistItem(req, res, next) {
+	const { title } = req.body;
+	const q = 'SELECT * FROM menuitems WHERE title = $1';
+
+	try {
+		const queryResult = await query(q, [title]);
+		if (queryResult.rowCount === 0) return next();
+		else
+			return res.send({
+				result: 'an item with this title already exists, aborting insertion',
+			});
+	} catch (error) {
+		console.error(
+			`an error came up while checking if ${title} exists in menuitems`,
+			error
+		);
+		return res.send({
+			result: 'an error came up while adding new menuitem, please try again',
+		});
+	}
+}
+
+export async function doesExistCategory(req, res, next) {
+	const { title } = req.body;
+	const q = 'SELECT * FROM categories WHERE title = $1';
+
+	try {
+		const queryResult = await query(q, [title]);
+		if (queryResult.rowCount === 0) return next();
+		else
+			return res.send({
+				result: 'a category with this title already exists, aborting insertion',
+			});
+	} catch (error) {
+		console.error(
+			`an error came up while checking if ${title} exists in categories`,
+			error
+		);
+		return res.send({
+			result: 'an error came up while adding new category, please try again',
+		});
+	}
+}
+
+export async function doesNotExistCategory(req, res, next) {
+	const { id } = req.params;
+	const q = 'SELECT * FROM categories WHERE id = $1';
+
+	try {
+		const queryResult = await query(q, [id]);
+		if (queryResult.rowCount === 1) return next();
+		else
+			return res.send({
+				result: 'category with this id does not exist, aborting query',
+			});
+	} catch (error) {
+		console.error(
+			`an error came up while checking if ${id} exists in categories`,
+			error
+		);
+		return res.send({
+			result: 'an error came up while deleting category, please try again',
+		});
 	}
 }
 

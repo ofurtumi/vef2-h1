@@ -1,12 +1,15 @@
 # vef2-h1
 
 ## curl
+
 **til að posta json header**
 ~~~
 curl -X POST https://demo.com/demo \
 -H "Content-Type: application/json" \
 -d '{"paramID1": "paramVal1", "paramID2": "paramVal2"}'
 ~~~
+
+### matseðill
 
 **til að setja querystrings**
 ~~~
@@ -36,6 +39,8 @@ curl -X DELETE localhost:6969/menu/1
 curl -X PATCH localhost:6969/menu/8 -H "Content-Type: application/json" -d '{"title":"meat hell pizza", "description": "for people who hate meat, and themselves","price":9999}'
 ~~~
 
+### flokkar
+
 **til að sækja lista af flokkum**
 ~~~
 curl localhost:6969/categories
@@ -44,4 +49,14 @@ curl localhost:6969/categories
 **til að bæta við flokk**
 ~~~
 curl -X POST localhost:6969/categories -H "Content-Type: application/json" -d '{"title":"demo category"}'
+~~~
+
+**til að eyða flokk**
+~~~
+curl -X DELETE localhost:6969/categories/1
+~~~
+
+**til að uppfæra flokk**
+~~~
+curl -X PATCH localhost:6969/categories/2 -H "Content-Type: application/json" -d '{"title":"paninis"}'
 ~~~
