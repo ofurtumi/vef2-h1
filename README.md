@@ -18,9 +18,7 @@ curl -G -d 'category=pizzas' localhost:6969/menu
 
 **til að bæta við menuitem**
 ~~~
-curl -X POST localhost:6969/menu \
--H "Content-Type: application/json" \
--d '{"title":"demoburger","price":200, "description":"demo", "image":"linkToImg","categoryid":1}' 
+curl -X POST localhost:6969/menu -H "Content-Type: application/json" -d '{"title":"demoburger","price":200, "description":"demo", "image":"linkToImg","categoryid":"27dc4dc7-7a06-4306-9923-f124066747fa"}' 
 ~~~
 
 **til að ná í sérstakt menuitem útfrá id**

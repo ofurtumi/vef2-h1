@@ -38,4 +38,5 @@ VALUES
 ('Mushroom soup', 670, 'Creamy mushroom soup with wild mushrooms', 'linkToImage', '1a209e14-5b00-4986-bb72-ac0390e8b176'),
 ('Chicken soup', 700 , 'The way mama wanted aspired to make', 'linkToImage', '1a209e14-5b00-4986-bb72-ac0390e8b176'),
 ('Aspargus soup', 560, 'Cream of aspargus', 'linkToImage', '1a209e14-5b00-4986-bb72-ac0390e8b176'),
-('meat paradise soup', 750, 'meat and water', 'linkToImage', '1a209e14-5b00-4986-bb72-ac0390e8b176');
+('meat paradise soup', 750, 'meat and water', 'linkToImage', '1a209e14-5b00-4986-bb72-ac0390e8b176'),
+('testpizza',1000,'test description','testLinkToImage','e7cfb87e-d881-4d23-91b1-47295846ef42');

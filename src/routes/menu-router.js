@@ -57,7 +57,7 @@ async function newMenuItem(req, res) {
 
 	let success = await insertMenuItem(values);
 
-	res.send({ result: success });
+	res.send(success);
 }
 
 async function showMenuItem(req, res) {
@@ -70,7 +70,7 @@ async function showMenuItem(req, res) {
 async function deleteMenuItem(req, res) {
 	const { id } = req.params;
 	const item = await selectItemWithId(id);
-	if (item.exists) {
+	if (item) {
 		try {
 			const queryResult = await query(
 				'DELETE FROM menuitems WHERE id = $1 RETURNING *',
