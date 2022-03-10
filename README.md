@@ -1,5 +1,14 @@
 # vef2-h1
 
+## database
+makedb <nafn á db>
+.env 
+~~~
+DATABASE_URL=postgres://<user>:<password>@localhost/<nafn á db>
+SESSION_SECRET=ASDF
+BASE_URL=http://localhost:6969
+~~~
+
 ## curl
 
 **til að posta json header**
