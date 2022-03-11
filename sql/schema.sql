@@ -18,16 +18,17 @@ CREATE TABLE menuitems (
 );
 
 CREATE TABLE cart (
-    id VARCHAR UNIQUE,
-    created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp
+    cart_id uuid DEFAULT uuid_generate_v4 (),
+    created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
+    PRIMARY KEY (cart_id)
 );
 
 CREATE TABLE cartline (
-    item INT NOT NULL,
-    cartid VARCHAR NOT NULL,
+    itemid INT,
+    cartid uuid,
     num INT,
-    CONSTRAINT item FOREIGN KEY (item) REFERENCES menuitems (id),
-    CONSTRAINT cartid FOREIGN KEY (cartid) REFERENCES cart (id)
+    CONSTRAINT itemid FOREIGN KEY (itemid) REFERENCES menuitems (id),
+    CONSTRAINT cartid FOREIGN KEY (cartid) REFERENCES cart (cart_id)
 );
 
 CREATE TABLE orders (

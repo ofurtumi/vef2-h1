@@ -8,6 +8,7 @@ import passport from './lib/login.js'
 import { title } from 'process';
 import bodyParser from 'body-parser';
 import { categoryRouter } from './routes/category-router.js';
+import { cartRouter } from './routes/cart-router.js';
 
 dotenv.config();
 
@@ -50,6 +51,7 @@ app.use(bodyParser.json())
 // 	isInvalid,
 // };
 
+app.use('/cart', cartRouter)
 app.use('/menu', menuRouter);
 app.use('/categories', categoryRouter);
 app.use('/',(req,res)=>{
