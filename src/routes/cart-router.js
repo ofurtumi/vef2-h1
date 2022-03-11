@@ -49,7 +49,29 @@ async function showCart(req, res) {
 	});
 }
 
-async function deleteCart(req, res) {}
+async function deleteCart(req, res) {
+	const { cartid } = req.params;
+	const q1 = 'DELETE FROM cartline WHERE cartid = $1 RETURNING *';
+	const q2 = 'DELETE FROM cart WHERE cart_id = $1 RETURNING *';
+	try {
+		const queryResult1 = await query(q1, [cartid]);
+		const queryResult2 = await query(q2, [cartid]);
+		if (queryResult1.rowCount > 0)
+			return res.send({
+				result: 'successfully deleted: ',
+				cart: queryResult2.rows[0],
+			});
+		else
+			return res.send({
+				result: 'failed to delete cart, please try again',
+			});
+	} catch (error) {
+		console.error('an error came up while deleting cart id:', cartid);
+		return res.send({
+			result: 'an error occured, please check if id is correct and try again',
+		});
+	}
+}
 
 async function addToCart(req, res) {
 	const { cartid } = req.params;
@@ -69,7 +91,7 @@ cartRouter.get('/', listAllCarts);
 cartRouter.post('/', newCart);
 
 cartRouter.get('/:cartid', doesExistCart, showCart);
-cartRouter.delete('/:cartid', deleteCart);
+cartRouter.delete('/:cartid', doesExistCart, deleteCart);
 cartRouter.post('/:cartid', doesExistCart, addToCart);
 
 cartRouter.get('/:cartid/line/:id', showCartLine);

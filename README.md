@@ -89,3 +89,8 @@ curl localhost:6969/cart/ae66c235-6b24-47fc-8bc8-c4b8aa838f74
 ~~~
 curl -X POST localhost:6969/cart/ae66c235-6b24-47fc-8bc8-c4b8aa838f74 -H "Content-Type:application/json" -d '{"itemid":1,"num":10}'
 ~~~
+
+**til að eyða körfu**
+~~~
+curl -X DELETE localhost:6969/cart/ae66c235-6b24-47fc-8bc8-c4b8aa838f74
+~~~
