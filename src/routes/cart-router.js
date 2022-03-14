@@ -84,53 +84,79 @@ async function addToCart(req, res) {
 }
 
 async function showCartLine(req, res) {
-	const { cartid, id} = req.params;
+	const { cartid, id } = req.params;
 	const q = `select 
     menuitems.id,menuitems.title,menuitems.price,cartline.num
     from cartline
     INNER JOIN menuitems ON cartline.itemid=menuitems.id
-    WHERE cartid = $1 AND itemid = $2`
+    WHERE cartid = $1 AND itemid = $2`;
 
 	try {
-		const queryResult = await query(q,[cartid,id])
+		const queryResult = await query(q, [cartid, id]);
 		if (queryResult.rows && queryResult.rowCount === 1) {
 			const price = queryResult.rows[0].price * queryResult.rows[0].num;
-			return res.send({line:queryResult.rows[0],line_price:price})
-		}
-		else return res.send({result:'no cartline with item of id ' + id + ' in cart ' + cartid})
+			return res.send({ line: queryResult.rows[0], line_price: price });
+		} else
+			return res.send({
+				result:
+					'no cartline with item of id ' + id + ' in cart ' + cartid,
+			});
 	} catch (error) {
-		console.error('error came up while querying cartline')
-		return res.send({result:'an error came up while querying this line, please try again'})
+		console.error('error came up while querying cartline');
+		return res.send({
+			result: 'an error came up while querying this line, please try again',
+		});
 	}
-
 }
 async function deleteCartLine(req, res) {
-	const { cartid, id} = req.params;
+	const { cartid, id } = req.params;
 	const q = `DELETE FROM cartline WHERE cartid = $1 AND itemid = $2 RETURNING *`;
 
 	try {
 		const queryResult = await query(q, [cartid, id]);
 		if (queryResult.rows && queryResult.rowCount === 1) {
-			return res.send({result:'success',deleted:queryResult.rows[0]})
-		}
-		else return res.send({result:'failed',message:'failed to delete cartline, please make sure line exists and try again'})
+			return res.send({
+				result: 'success',
+				deleted: queryResult.rows[0],
+			});
+		} else
+			return res.send({
+				result: 'failed',
+				message:
+					'failed to delete cartline, please make sure line exists and try again',
+			});
 	} catch (error) {
-		console.error('error while trying to delete cartline ' + cartid + 'where id ' + id);
-		return res.send({result:'an error occured while trying to delete cartline, please try again'});
+		console.error(
+			'error while trying to delete cartline ' + cartid + 'where id ' + id
+		);
+		return res.send({
+			result: 'an error occured while trying to delete cartline, please try again',
+		});
 	}
 }
 // async function updateCartLine(req, res) {
-// 	const { cartid, id} = req.params;
-// 	const q = `UPDATE cartline SET )`;
+// 	const { cartid, id } = req.params;
+// 	const { num } = req.body;
+// 	if (num <= 0)
+// 		return res.send({
+// 			result: 'unable to set number of items to 0 or less, if you want to delete use the delete cart line function',
+// 		});
+
+// 	const q = `UPDATE cartline SET num = $1)`;
+// 	try {
+// 		const queryResult = await
+// 	} catch (error) {
+		
+// 	}
 // }
 
-cartRouter.get('/', listAllCarts); 											// komið
-cartRouter.post('/', newCart); 												// komið
+cartRouter.get('/', listAllCarts); // komið
+cartRouter.post('/', newCart); // komið
 
-cartRouter.get('/:cartid', doesExistCart, showCart);						// komið
-cartRouter.delete('/:cartid', doesExistCart, deleteCart); 					// komið
-cartRouter.post('/:cartid', doesExistCart, addToCart); 						// komið
+cartRouter.get('/:cartid', doesExistCart, showCart); // komið
+cartRouter.delete('/:cartid', doesExistCart, deleteCart); // komið
+cartRouter.post('/:cartid', doesExistCart, addToCart); // komið
 
-cartRouter.get('/:cartid/line/:id', doesExistCart, showCartLine);			// komið
-cartRouter.delete('/:cartid/line/:id', doesExistCart, deleteCartLine);		// komið
-// cartRouter.patch('/:cartid/line/:id', doesExistCart, updateCartLine);		// í vinnslu
+cartRouter.get('/:cartid/line/:id', doesExistCart, showCartLine); // komið
+cartRouter.delete('/:cartid/line/:id', doesExistCart, deleteCartLine); // komið
+// cartRouter.patch('/:cartid/line/:id', doesExistCart, updateCartLine); // í vinnslu
