@@ -8,6 +8,9 @@ makedb <nafn á db>
 DATABASE_URL=postgres://<user>:<password>@localhost/<nafn á db>
 SESSION_SECRET=ASDF
 BASE_URL=http://localhost:6969
+CLOUDINARY_API_KEY= 721412912684114
+CLOUDINARY_API_SECRET= GD3ScD7po88P6u55tAb13X2Yqxs
+CLOUDINARY_NAME= storimike
 ~~~
 
 ## curl
