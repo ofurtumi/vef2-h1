@@ -2,7 +2,8 @@
 
 ## database
 makedb <nafn á db>
-.env 
+
+þarf líka að setja þetta dót í .env skrá
 ~~~
 DATABASE_URL=postgres://<user>:<password>@localhost/<nafn á db>
 SESSION_SECRET=ASDF
@@ -93,4 +94,14 @@ curl -X POST localhost:6969/cart/ae66c235-6b24-47fc-8bc8-c4b8aa838f74 -H "Conten
 **til að eyða körfu**
 ~~~
 curl -X DELETE localhost:6969/cart/ae66c235-6b24-47fc-8bc8-c4b8aa838f74
+~~~
+
+**til að sækja línu í körfu þar sem item er með id 1**
+~~~ 
+curl localhost:6969/cart/ae66c235-6b24-47fc-8bc8-c4b8aa838f74/line/1
+~~~
+
+**til að eyða línu í körfu þar sem item er með id 1**
+~~~
+curl -X DELETE localhost:6969/cart/ae66c235-6b24-47fc-8bc8-c4b8aa838f74/line/1
 ~~~

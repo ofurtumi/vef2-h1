@@ -32,7 +32,7 @@ async function showCart(req, res) {
 	let price = 0;
 
 	const q2 = `select 
-    menuitems.title,menuitems.price,cartline.num
+    menuitems.id,menuitems.title,menuitems.price,cartline.num
     from cartline
     INNER JOIN menuitems ON cartline.itemid=menuitems.id
     WHERE cartid = $1`;
@@ -83,17 +83,54 @@ async function addToCart(req, res) {
 	return res.send(queryResult.rows);
 }
 
-async function showCartLine(req, res) {}
-async function deleteCartLine(req, res) {}
-async function updateCartLine(req, res) {}
+async function showCartLine(req, res) {
+	const { cartid, id} = req.params;
+	const q = `select 
+    menuitems.id,menuitems.title,menuitems.price,cartline.num
+    from cartline
+    INNER JOIN menuitems ON cartline.itemid=menuitems.id
+    WHERE cartid = $1 AND itemid = $2`
 
-cartRouter.get('/', listAllCarts);
-cartRouter.post('/', newCart);
+	try {
+		const queryResult = await query(q,[cartid,id])
+		if (queryResult.rows && queryResult.rowCount === 1) {
+			const price = queryResult.rows[0].price * queryResult.rows[0].num;
+			return res.send({line:queryResult.rows[0],line_price:price})
+		}
+		else return res.send({result:'no cartline with item of id ' + id + ' in cart ' + cartid})
+	} catch (error) {
+		console.error('error came up while querying cartline')
+		return res.send({result:'an error came up while querying this line, please try again'})
+	}
 
-cartRouter.get('/:cartid', doesExistCart, showCart);
-cartRouter.delete('/:cartid', doesExistCart, deleteCart);
-cartRouter.post('/:cartid', doesExistCart, addToCart);
+}
+async function deleteCartLine(req, res) {
+	const { cartid, id} = req.params;
+	const q = `DELETE FROM cartline WHERE cartid = $1 AND itemid = $2 RETURNING *`;
 
-cartRouter.get('/:cartid/line/:id', showCartLine);
-cartRouter.delete('/:cartid/line/:id', deleteCartLine);
-cartRouter.patch('/:cartid/line/:id', updateCartLine);
+	try {
+		const queryResult = await query(q, [cartid, id]);
+		if (queryResult.rows && queryResult.rowCount === 1) {
+			return res.send({result:'success',deleted:queryResult.rows[0]})
+		}
+		else return res.send({result:'failed',message:'failed to delete cartline, please make sure line exists and try again'})
+	} catch (error) {
+		console.error('error while trying to delete cartline ' + cartid + 'where id ' + id);
+		return res.send({result:'an error occured while trying to delete cartline, please try again'});
+	}
+}
+// async function updateCartLine(req, res) {
+// 	const { cartid, id} = req.params;
+// 	const q = `UPDATE cartline SET )`;
+// }
+
+cartRouter.get('/', listAllCarts); 											// komið
+cartRouter.post('/', newCart); 												// komið
+
+cartRouter.get('/:cartid', doesExistCart, showCart);						// komið
+cartRouter.delete('/:cartid', doesExistCart, deleteCart); 					// komið
+cartRouter.post('/:cartid', doesExistCart, addToCart); 						// komið
+
+cartRouter.get('/:cartid/line/:id', doesExistCart, showCartLine);			// komið
+cartRouter.delete('/:cartid/line/:id', doesExistCart, deleteCartLine);		// komið
+// cartRouter.patch('/:cartid/line/:id', doesExistCart, updateCartLine);		// í vinnslu
