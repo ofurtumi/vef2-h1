@@ -9,7 +9,7 @@ VALUES
 INSERT INTO menuitems
 (title, price, description, image, categoryid)
 VALUES 
-('cheeseburger',500,'burger with cheese on it', 'linkToImage', '27dc4dc7-7a06-4306-9923-f124066747fa'),
+('cheeseburger',500,'burger with cheese on it', '0dd96d5718f3fa2a04e853110e757817_tlqdlb', '27dc4dc7-7a06-4306-9923-f124066747fa'),
 ('hamburger',350,'burger with no cheese', 'linkToImage', '27dc4dc7-7a06-4306-9923-f124066747fa'),
 ('veganburger',500,'burger with no meat', 'linkToImage', '27dc4dc7-7a06-4306-9923-f124066747fa'),
 ('meat paradise burger',750,'burger with lots of meat', 'linkToImage', '27dc4dc7-7a06-4306-9923-f124066747fa'),
