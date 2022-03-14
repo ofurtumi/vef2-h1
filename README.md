@@ -105,3 +105,8 @@ curl localhost:6969/cart/ae66c235-6b24-47fc-8bc8-c4b8aa838f74/line/1
 ~~~
 curl -X DELETE localhost:6969/cart/ae66c235-6b24-47fc-8bc8-c4b8aa838f74/line/1
 ~~~
+
+**til að breyta magni af vöru í körfulínu**
+~~~
+curl -X PATCH localhost:6969/cart/ae66c235-6b24-47fc-8bc8-c4b8aa838f74/line/7 -H "Content Type:application/json" -d '{"num":"7"}'
+~~~

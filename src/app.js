@@ -10,6 +10,7 @@ import bodyParser from 'body-parser';
 import { categoryRouter } from './routes/category-router.js';
 import { cartRouter } from './routes/cart-router.js';
 import cloudinary from 'cloudinary'
+import { imageRouter } from './routes/image-router.js';
 
 dotenv.config();
 
@@ -44,11 +45,6 @@ app.use(
 	})
 );
 
-cloudinary.config({ 
-	cloud_name: process.env.CLOUD_NAME,
-	api_key: process.env.API_KEY,
-	api_secret: process.env.API_SECRET
-});
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -58,6 +54,7 @@ app.use(bodyParser.json())
 app.use('/cart', cartRouter)
 app.use('/menu', menuRouter);
 app.use('/categories', categoryRouter);
+app.use('/image', imageRouter)
 app.use('/',(req,res)=>{
 	res.status(201).send({'Title':'Forsíða'})
 })
