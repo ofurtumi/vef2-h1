@@ -167,4 +167,4 @@ cartRouter.post('/:cartid', doesExistCart, addToCart); // komið
 
 cartRouter.get('/:cartid/line/:id', doesExistCart, showCartLine); // komið
 cartRouter.delete('/:cartid/line/:id', doesExistCart, deleteCartLine); // komið
-cartRouter.patch('/:cartid/line/:id', doesExistCart, updateCartLine); // í vinnslu
+cartRouter.patch('/:cartid/line/:id', doesExistCart, updateCartLine); // komið
