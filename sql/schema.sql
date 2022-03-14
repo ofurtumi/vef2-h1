@@ -28,26 +28,26 @@ CREATE TABLE cartline (
     cartid uuid,
     num INT,
     CONSTRAINT itemid FOREIGN KEY (itemid) REFERENCES menuitems (id),
-    CONSTRAINT cartid FOREIGN KEY (cartid) REFERENCES cart (cart_id)
+    CONSTRAINT cartid FOREIGN KEY (cartid) REFERENCES cart (cart_id) ON DELETE CASCADE
 );
 
 CREATE TABLE orders (
-    id VARCHAR UNIQUE,
+    order_id uuid DEFAULT uuid_generate_v4 (),
     created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
-    name VARCHAR NOT NULL
+    PRIMARY KEY (order_id)
 );
 
 CREATE TABLE orderline (
-    item INT,
-    orderid VARCHAR,
+    itemid INT,
+    orderid uuid,
     num INT,
-    CONSTRAINT item FOREIGN KEY (item) REFERENCES menuitems (id),
-    CONSTRAINT orderid FOREIGN KEY (orderid) REFERENCES orders (id)
+    CONSTRAINT itemid FOREIGN KEY (itemid) REFERENCES menuitems (id),
+    CONSTRAINT orderid FOREIGN KEY (orderid) REFERENCES orders (order_id) ON DELETE CASCADE
 );
 
 CREATE TABLE orderstatus (
-    orderid VARCHAR,
+    orderid uuid,
     status INT,
     updated TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
-    CONSTRAINT orderid FOREIGN KEY (orderid) REFERENCES orders (id)
+    CONSTRAINT orderid FOREIGN KEY (orderid) REFERENCES orders (order_id)
 )

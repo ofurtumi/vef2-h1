@@ -139,7 +139,6 @@ async function updateCartLine(req, res) {
 	const { cartid, id } = req.params;
 	const { num } = req.body;
 
-	console.log('req.body --> ', req.body)
 	if (num <= 0)
 		return res.send({
 			result: 'unable to set number of items to 0 or less, if you want to delete use the delete cart line function',
@@ -158,13 +157,13 @@ async function updateCartLine(req, res) {
 	}
 }
 
-cartRouter.get('/', listAllCarts); // komið
-cartRouter.post('/', newCart); // komið
+cartRouter.get('/', catchErrors(listAllCarts)); // komið
+cartRouter.post('/', catchErrors(newCart)); // komið
 
-cartRouter.get('/:cartid', doesExistCart, showCart); // komið
-cartRouter.delete('/:cartid', doesExistCart, deleteCart); // komið
-cartRouter.post('/:cartid', doesExistCart, addToCart); // komið
+cartRouter.get('/:cartid', doesExistCart, catchErrors(showCart)); // komið
+cartRouter.delete('/:cartid', doesExistCart, catchErrors(deleteCart)); // komið
+cartRouter.post('/:cartid', doesExistCart, catchErrors(addToCart)); // komið
 
-cartRouter.get('/:cartid/line/:id', doesExistCart, showCartLine); // komið
-cartRouter.delete('/:cartid/line/:id', doesExistCart, deleteCartLine); // komið
-cartRouter.patch('/:cartid/line/:id', doesExistCart, updateCartLine); // komið
+cartRouter.get('/:cartid/line/:id', doesExistCart, catchErrors(showCartLine)); // komið
+cartRouter.delete('/:cartid/line/:id', doesExistCart, catchErrors(deleteCartLine)); // komið
+cartRouter.patch('/:cartid/line/:id', doesExistCart, catchErrors(updateCartLine)); // komið

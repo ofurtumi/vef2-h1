@@ -91,7 +91,7 @@ curl localhost:6969/cart/ae66c235-6b24-47fc-8bc8-c4b8aa838f74
 
 **til að bæta við í körfu**
 ~~~
-curl -X POST localhost:6969/cart/ae66c235-6b24-47fc-8bc8-c4b8aa838f74 -H "Content-Type:application/json" -d '{"itemid":1,"num":10}'
+curl -X POST localhost:6969/cart/ae66c235-6b24-47fc-8bc8-c4b8aa838f74 -H "Content-Type:application/json" -d '{"itemid":10,"num":10}'
 ~~~
 
 **til að eyða körfu**
@@ -112,4 +112,12 @@ curl -X DELETE localhost:6969/cart/ae66c235-6b24-47fc-8bc8-c4b8aa838f74/line/1
 **til að breyta magni af vöru í körfulínu**
 ~~~
 curl -X PATCH localhost:6969/cart/ae66c235-6b24-47fc-8bc8-c4b8aa838f74/line/7 -H "Content-Type:application/json" -d '{"num":10}'
+~~~
+
+## pöntun
+
+**til að bæta við pöntun**
+*ath til að geta bætt við pöntun þarf að vera til valid karfa*
+~~~
+curl -X POST localhost:6969/orders -H "Content-Type:application/json" -d '{"cartid":"ae66c235-6b24-47fc-8bc8-c4b8aa838f74"}'
 ~~~

@@ -11,6 +11,7 @@ import { categoryRouter } from './routes/category-router.js';
 import { cartRouter } from './routes/cart-router.js';
 import cloudinary from 'cloudinary'
 import { imageRouter } from './routes/image-router.js';
+import { orderRouter } from './routes/order-router.js';
 
 dotenv.config();
 
@@ -54,6 +55,7 @@ app.use(bodyParser.json())
 app.use('/cart', cartRouter)
 app.use('/menu', menuRouter);
 app.use('/categories', categoryRouter);
+app.use('/orders',orderRouter)
 app.use('/image', imageRouter)
 app.use('/',(req,res)=>{
 	res.status(201).send({'Title':'Forsíða'})

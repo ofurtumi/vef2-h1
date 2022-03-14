@@ -154,7 +154,9 @@ export async function doesNotExistCategory(req, res, next) {
 
 export async function doesExistCart(req, res, next) {
 	const q = 'SELECT * FROM cart WHERE cart_id = $1';
-	const { cartid } = req.params;
+	let { cartid } = req.params;
+	if (!cartid) cartid = req.body.cartid; 
+	// geri þett svo ég geti notað sama middleware fyrir bæði orders og carts
 
 	try {
 		const queryResult = await query(q, [cartid]);
