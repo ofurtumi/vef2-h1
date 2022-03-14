@@ -9,6 +9,7 @@ import { title } from 'process';
 import bodyParser from 'body-parser';
 import { categoryRouter } from './routes/category-router.js';
 import { cartRouter } from './routes/cart-router.js';
+import cloudinary from 'cloudinary'
 
 dotenv.config();
 
@@ -43,13 +44,16 @@ app.use(
 	})
 );
 
+cloudinary.config({ 
+	cloud_name: process.env.CLOUD_NAME,
+	api_key: process.env.API_KEY,
+	api_secret: process.env.API_SECRET
+});
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(bodyParser.json())
 
-// app.locals = {
-// 	isInvalid,
-// };
 
 app.use('/cart', cartRouter)
 app.use('/menu', menuRouter);
@@ -74,41 +78,4 @@ app.use((err, req, res, next) => {
 
 app.listen(port, () => {
 	console.info(`Server running at http://localhost:${port}/`);
-});
-
-const express = require("express");
-const cloudinary = require("cloudinary").v2;
-const bodyParser = require('body-parser');
-require('dotenv').config()
-
-app.use(bodyParser.json());
-	app.use(bodyParser.urlencoded({ extendend: true }));
-
-cloudinary.config({ 
-	cloud_name: process.env.CLOUD_NAME,
-	api_key: process.env.API_KEY,
-	api_secret: process.env.API_SECRET
-});
-
-app.get("/", (request, response, next) => {
-	response.json({ message: "Server response"});
-	next();
-});
-
-app.post("/image-upload", (request, respone) => {
-	const data = {
-		image: request.body.image,
-	}
-	cloudinary.uploader.upload(data.image)
-	.then((result) => {
-		response.status(200).send({
-			message: "success",
-			result,
-		});
-	}).catch((error) => {
-		response.status(500).send({
-			message: "failure",
-			error,
-		});
-	});
 });
