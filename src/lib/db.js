@@ -78,8 +78,7 @@ export async function selectItemWithId(id) {
 	const q = 'SELECT * FROM menuitems WHERE id = $1';
 	try {
 		const queryResult = await query(q, [id]);
-		if (queryResult.rowCount === 1)
-			return queryResult.rows;
+		if (queryResult.rowCount === 1) return queryResult.rows;
 		else return null;
 	} catch (error) {
 		console.error('an error came up', error);
@@ -150,6 +149,25 @@ export async function doesNotExistCategory(req, res, next) {
 		return res.send({
 			result: 'an error came up while deleting category, please try again',
 		});
+	}
+}
+
+export async function doesExistCart(req, res, next) {
+	const q = 'SELECT * FROM cart WHERE cart_id = $1';
+	const { cartid } = req.params;
+
+	try {
+		const queryResult = await query(q, [cartid]);
+		if (queryResult.rowCount === 1) return next();
+		else
+			return res.send({
+				result: 'no cart found with that id, please check id and try again',
+			});
+	} catch (error) {
+		console.error('an error occured while trying to query cart: ' + cartid);
+		return res.send(
+			'an error occured while trying to query cart, please try again'
+		);
 	}
 }
 
