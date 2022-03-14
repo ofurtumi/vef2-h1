@@ -40,3 +40,13 @@ VALUES
 ('Aspargus soup', 560, 'Cream of aspargus', 'v1647264178/20110412_asparagus3-1024x683_l1szek.jpg', '1a209e14-5b00-4986-bb72-ac0390e8b176'),
 ('meat paradise soup', 750, 'meat and water', 'v1647264209/P9060096_u2mnzd.jpg', '1a209e14-5b00-4986-bb72-ac0390e8b176'),
 ('testpizza',1000,'test description','testLinkToImage','e7cfb87e-d881-4d23-91b1-47295846ef42');
+
+INSERT INTO cart (cart_id)
+VALUES ('ae66c235-6b24-47fc-8bc8-c4b8aa838f74');
+INSERT INTO cartline (itemid, cartid, num)
+VALUES (1, 'ae66c235-6b24-47fc-8bc8-c4b8aa838f74', 2),
+    (5, 'ae66c235-6b24-47fc-8bc8-c4b8aa838f74', 1),
+    (19, 'ae66c235-6b24-47fc-8bc8-c4b8aa838f74', 4),
+    (7, 'ae66c235-6b24-47fc-8bc8-c4b8aa838f74', 3),
+    (8, 'ae66c235-6b24-47fc-8bc8-c4b8aa838f74', 4),
+    (15, 'ae66c235-6b24-47fc-8bc8-c4b8aa838f74', 2);
