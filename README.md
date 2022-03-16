@@ -121,3 +121,18 @@ curl -X PATCH localhost:6969/cart/ae66c235-6b24-47fc-8bc8-c4b8aa838f74/line/7 -H
 ~~~
 curl -X POST localhost:6969/orders -H "Content-Type:application/json" -d '{"cartid":"ae66c235-6b24-47fc-8bc8-c4b8aa838f74"}'
 ~~~
+
+**til að ná í ákveðna pöntun**
+~~~
+curl localhost:6969/orders/4448c1d5-8d2e-4413-9be7-e026b9c976b9
+~~~
+
+**til að ná í status ákveðnar pöntunar**
+~~~
+curl localhost:6969/orders/4448c1d5-8d2e-4413-9be7-e026b9c976b9/status
+~~~
+
+**til að uppfæra status pöntunar**
+~~~
+curl -X PATCH localhost:6969/orders/4448c1d5-8d2e-4413-9be7-e026b9c976b9/status
+~~~
