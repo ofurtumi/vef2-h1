@@ -155,7 +155,7 @@ export async function doesNotExistCategory(req, res, next) {
 export async function doesExistCart(req, res, next) {
 	const q = 'SELECT * FROM cart WHERE cart_id = $1';
 	let { cartid } = req.params;
-	if (!cartid) cartid = req.body.cartid; 
+	if (!cartid) cartid = req.body.cartid;
 	// geri þett svo ég geti notað sama middleware fyrir bæði orders og carts
 
 	try {
@@ -170,6 +170,26 @@ export async function doesExistCart(req, res, next) {
 		return res.send(
 			'an error occured while trying to query cart, please try again'
 		);
+	}
+}
+
+export async function doesExistSingleOrder(req, res, next) {
+	const { id } = req.params;
+	const q = 'SELECT * FROM orders WHERE order_id = $1';
+
+	try {
+		const queryResult = await query(q, [id]);
+		if (queryResult && queryResult.rowCount > 0) next();
+		else
+			return res.send({
+				result:
+					'No order with id ' +
+					id +
+					' exists in the database, please check id and try again',
+			});
+	} catch (error) {
+		console.error('an error occured while checking if order exists', error);
+		return res.send({result:'an error occured while checking if order exists, please try again'});
 	}
 }
 

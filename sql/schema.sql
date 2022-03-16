@@ -47,7 +47,7 @@ CREATE TABLE orderline (
 
 CREATE TABLE orderstatus (
     orderid uuid,
-    status INT,
+    status INT DEFAULT 0,
     updated TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
     CONSTRAINT orderid FOREIGN KEY (orderid) REFERENCES orders (order_id)
-)
+);
