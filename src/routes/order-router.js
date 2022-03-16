@@ -94,4 +94,4 @@ orderRouter.get('/:id/status', showOrderStatus);
 orderRouter.patch('/:id/status', updateOrderStatus);
 
 
-const ws = new WebSocket('ws://')
+// const ws = new WebSocket('ws://')
