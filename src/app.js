@@ -79,3 +79,44 @@ app.use((err, req, res, next) => {
 app.listen(port, () => {
 	console.info(`Server running at http://localhost:${port}/`);
 });
+
+//const db = require('dbConnect.cjs');
+app.post("/persist-image", (request, response) => {
+	const data = {
+	  title: request.body.title,
+	  image: request.body.image
+	}
+  
+	cloudinary.uploader.upload(data.image)
+	.then((image) => {
+	  db.pool.connect((err, client) => {
+		const insertQuery = 'INSERT INTO images (title, cloudinary_id, image_url) VALUES($1,$2,$3) RETURNING *';
+		const values = [data.title, image.public_id, image.secure_url];
+  
+		client.query(insertQuery, values)
+		.then((result) => {
+		  result = result.rows[0];
+  
+		  response.status(201).send({
+			status: "success",
+			data: {
+			  message: "Image Uploaded Successfully",
+			  title: result.title,
+			  cloudinary_id: result.cloudinary_id,
+			  image_url: result.image_url,
+			},
+		  })
+		}).catch((e) => {
+		  response.status(500).send({
+			message: "Villa",
+			e,
+		  });
+		})
+	  })  
+	}).catch((error) => {
+	  response.status(500).send({
+		message: "Villa",
+		error,
+	  });
+	});
+  });
