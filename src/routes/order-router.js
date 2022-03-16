@@ -92,3 +92,6 @@ orderRouter.get('/:id', showSingleOrder);
 
 orderRouter.get('/:id/status', showOrderStatus);
 orderRouter.patch('/:id/status', updateOrderStatus);
+
+
+const ws = new WebSocket('ws://')

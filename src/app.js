@@ -12,6 +12,8 @@ import { cartRouter } from './routes/cart-router.js';
 import cloudinary from 'cloudinary'
 import { imageRouter } from './routes/image-router.js';
 import { orderRouter } from './routes/order-router.js';
+import WebSocket from 'ws';
+import initWebSocket from './lib/websockets.js';
 
 dotenv.config();
 
@@ -78,3 +80,11 @@ app.use((err, req, res, next) => {
 app.listen(port, () => {
 	console.info(`Server running at http://localhost:${port}/`);
 });
+
+app.on('upgrade', (request, socket, head) => {
+	const pathname = url.parse(request.urk).pathname;
+
+	
+})
+
+initWebSocket()
