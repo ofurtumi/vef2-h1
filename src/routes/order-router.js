@@ -109,7 +109,6 @@ async function showSingleOrder(req, res) {
 	});
 }
 
-// todo bæta við status ekki gott að forrita svona þreyttur :)()
 
 async function showOrderStatus(req, res) {
 	const {id } = req.params;
@@ -143,5 +142,12 @@ orderRouter.post('/', doesExistCart, newOrder, setOrderStatus, fillOrder);
 
 orderRouter.get('/:id', doesExistSingleOrder, showSingleOrder);
 
+
 orderRouter.get('/:id/status', doesExistSingleOrder, showOrderStatus);
 orderRouter.patch('/:id/status', doesExistSingleOrder, updateOrderStatus);
+
+orderRouter.get('/:id/status', showOrderStatus);
+orderRouter.patch('/:id/status', updateOrderStatus);
+
+
+const ws = new WebSocket('ws://')
