@@ -13,7 +13,9 @@ import cloudinary from 'cloudinary'
 import { imageRouter } from './routes/image-router.js';
 import { orderRouter } from './routes/order-router.js';
 import WebSocket from 'ws';
-// import initWebSocket from './lib/websockets.js';
+import initWebSocket from './lib/websockets.js';
+import expressWs from 'express-ws';
+
 
 dotenv.config();
 
@@ -31,6 +33,8 @@ if (!connectionString || !sessionSecret) {
 }
 
 const app = express();
+
+expressWs(app);
 
 // Sér um að req.body innihaldi gögn úr formi
 app.use(express.urlencoded({ extended: true }));
