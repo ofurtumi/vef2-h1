@@ -184,5 +184,10 @@ orderRouter.patch('/:id/status', doesExistSingleOrder, updateOrderStatus);
 orderRouter.get('/:id/status', showOrderStatus);
 orderRouter.patch('/:id/status', updateOrderStatus);
 
+orderRouter.get('/test/:id', async (req,res) => {
+	const { id } = req.params;
+	const result = await getOrderIfExists(id);
+	return res.send(result);
+})
 
 // const ws = new WebSocket('ws://')

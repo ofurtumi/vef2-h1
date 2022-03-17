@@ -1,17 +1,17 @@
-import {WebSocketServer} from "ws"
+// import {WebSocketServer} from "ws"
 
-export default function initWebSocket() {
+// export default function initWebSocket() {
 
-    const wss = new WebSocketServer({ noServer : true });
+//     const wss = new WebSocketServer({ noServer : true });
 
-    wss.on("connection", ws => {
-        console.log("New client connected!");
-        ws.on("message", () => {
-            console.log("resived")
-        });
-        ws.on("close", () => {
-            console.log("Client has disconnected!");
-        });
-    });
-return wss;
-}
+//     wss.on("connection", ws => {
+//         console.log("New client connected!");
+//         ws.on("message", () => {
+//             console.log("resived")
+//         });
+//         ws.on("close", () => {
+//             console.log("Client has disconnected!");
+//         });
+//     });
+// return wss;
+// }

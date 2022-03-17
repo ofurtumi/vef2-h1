@@ -16,6 +16,7 @@ import WebSocket from 'ws';
 import initWebSocket from './lib/websockets.js';
 import expressWs from 'express-ws';
 
+
 dotenv.config();
 
 const {
@@ -131,4 +132,4 @@ app.on('upgrade', (request, socket, head) => {
 	
 })
 
-initWebSocket()
+// initWebSocket()
