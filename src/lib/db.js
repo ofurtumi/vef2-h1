@@ -193,6 +193,20 @@ export async function doesExistSingleOrder(req, res, next) {
 	}
 }
 
+export async function getOrderIfExists(id) {
+	const q = 'SELECT * FROM orders WHERE order_id = $1';
+	try {
+		const queryResult = await query(q,[id]);
+		if (queryResult.rows && queryResult.rowCount !== 0) {
+			return queryResult.rows[0];
+		}
+		else return null;
+	} catch (error) {
+		console.error('error occured while getting order', error);
+		return null;
+	}
+}
+
 export async function end() {
 	await pool.end();
 }
