@@ -12,8 +12,6 @@ import { cartRouter } from './routes/cart-router.js';
 import cloudinary from 'cloudinary'
 import { imageRouter } from './routes/image-router.js';
 import { orderRouter } from './routes/order-router.js';
-import WebSocket from 'ws';
-import initWebSocket from './lib/websockets.js';
 import expressWs from 'express-ws';
 
 
