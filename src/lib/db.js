@@ -194,7 +194,7 @@ export async function doesExistSingleOrder(req, res, next) {
 }
 
 export async function getOrderIfExists(id) {
-	const q = 'SELECT * FROM orders WHERE order_id = $1';
+	const q = 'SELECT orderid, status, updated FROM orderstatus WHERE orderid = $1';
 	try {
 		const queryResult = await query(q,[id]);
 		if (queryResult.rows && queryResult.rowCount !== 0) {
