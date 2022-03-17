@@ -13,7 +13,7 @@ import cloudinary from 'cloudinary'
 import { imageRouter } from './routes/image-router.js';
 import { orderRouter } from './routes/order-router.js';
 import WebSocket from 'ws';
-import initWebSocket from './lib/websockets.js';
+// import initWebSocket from './lib/websockets.js';
 
 dotenv.config();
 
@@ -128,4 +128,4 @@ app.on('upgrade', (request, socket, head) => {
 	
 })
 
-initWebSocket()
+// initWebSocket()

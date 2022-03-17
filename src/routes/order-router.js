@@ -1,7 +1,7 @@
 import express from 'express';
 import { validationResult } from 'express-validator';
 import { catchErrors } from '../lib/catch-errors.js';
-import { doesExistCart, doesExistSingleOrder, query } from '../lib/db.js';
+import { doesExistCart, doesExistSingleOrder, getOrderIfExists, query } from '../lib/db.js';
 
 export const orderRouter = express.Router();
 
@@ -149,5 +149,10 @@ orderRouter.patch('/:id/status', doesExistSingleOrder, updateOrderStatus);
 orderRouter.get('/:id/status', showOrderStatus);
 orderRouter.patch('/:id/status', updateOrderStatus);
 
+orderRouter.get('/test/:id', async (req,res) => {
+	const { id } = req.params;
+	const result = await getOrderIfExists(id);
+	return res.send(result);
+})
 
 // const ws = new WebSocket('ws://')
