@@ -60,4 +60,5 @@ import { comparePasswords, findById, findByUsername } from './users.js';
     return res.redirect('/admin/login');
   }
   
+  
   export default passport;

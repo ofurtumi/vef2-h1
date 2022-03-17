@@ -1,5 +1,7 @@
 import { readFile } from 'fs/promises';
 import { createSchema, dropSchema, end, query } from './lib/db.js';
+import bcrypt from 'bcrypt';
+import { createUser } from './lib/users.js';
 
 async function create() {
     const drop = await dropSchema();
@@ -27,7 +29,14 @@ async function create() {
     } else {
       console.info('data not inserted');
     }
-  
+    const insertAdmin = await createUser('admin','12345', true);
+
+    if(insertAdmin) {
+      console.info('admin inserted');
+    } else {
+      console.info('admin not inserted');
+    }
+
     await end();
   }
   

@@ -13,6 +13,7 @@ import cloudinary from 'cloudinary'
 import { imageRouter } from './routes/image-router.js';
 import { orderRouter } from './routes/order-router.js';
 import expressWs from 'express-ws';
+import {userRouter} from './routes/user-router.js'
 
 
 dotenv.config();
@@ -61,6 +62,7 @@ app.use('/menu', menuRouter);
 app.use('/categories', categoryRouter);
 app.use('/orders',orderRouter)
 app.use('/image', imageRouter)
+app.use('/user',userRouter)
 app.use('/',(req,res)=>{
 	res.status(201).send({'Title':'Forsíða'})
 })
