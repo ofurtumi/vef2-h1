@@ -4,6 +4,7 @@ import { catchErrors } from '../lib/catch-errors.js';
 import { doesExistCart, doesExistSingleOrder, query, getOrderIfExists } from '../lib/db.js';
 import patch from 'express-ws/lib/add-ws-method.js';
 import { adminConnections } from './user-router.js';
+import { requireAuthentication } from '../lib/login.js';
 
 patch.default(express.Router);
 
@@ -185,7 +186,7 @@ async function connectClient(ws, req){
 }
 
 
-orderRouter.get('/', showOrders);
+orderRouter.get('/', requireAuthentication,showOrders);
 orderRouter.post('/', doesExistCart, newOrder, setOrderStatus, fillOrder);
 
 orderRouter.get('/:id', doesExistSingleOrder, showSingleOrder);
@@ -193,7 +194,7 @@ orderRouter.get('/:id', doesExistSingleOrder, showSingleOrder);
 orderRouter.ws('/:id', connectClient);
 
 orderRouter.get('/:id/status', doesExistSingleOrder, showOrderStatus);
-orderRouter.post('/:id/status', doesExistSingleOrder, updateOrderStatus);
+orderRouter.post('/:id/status', requireAuthentication,doesExistSingleOrder, updateOrderStatus);
 
 orderRouter.get('/test/:id', async (req,res) => {
 	const { id } = req.params;

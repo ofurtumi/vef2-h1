@@ -49,6 +49,72 @@ import { comparePasswords, findById, findByUsername } from './users.js';
       done(err);
     }
   });
+  export function requireAuthentication(req, res, next) {
+    return passport.authenticate(
+      'jwt',
+      { session: false },
+      (err, user, info) => {
+        if (err) {
+          return next(err);
+        }
+  
+        if (!user) {
+          const error = info.name === 'TokenExpiredError'
+            ? 'expired token' : 'invalid token';
+  
+          return res.status(401).json({ error });
+        }
+  
+        // Látum notanda vera aðgengilegan í rest af middlewares
+        req.user = user;
+        return next();
+      },
+    )(req, res, next);
+  }
+  app.get('/', (req, res) => {
+    res.json({
+      login: '/login',
+      admin: '/admin',
+    });
+  });
+  
+  app.post('/login', async (req, res) => {
+    const { username, password = '' } = req.body;
+  
+    const user = await findByUsername(username);
+  
+    if (!user) {
+      return res.status(401).json({ error: 'No such user' });
+    }
+  
+    const passwordIsCorrect = await comparePasswords(password, user.password);
+  
+    if (passwordIsCorrect) {
+      const payload = { id: user.id };
+      const tokenOptions = { expiresIn: tokenLifetime };
+      const token = jwt.sign(payload, jwtOptions.secretOrKey, tokenOptions);
+      return res.json({ token });
+    }
+  
+    return res.status(401).json({ error: 'Invalid password' });
+  });
+  
+  app.get('/admin', requireAuthentication, (req, res) => {
+    res.json({ data: 'top secret' });
+  });
+  
+  function notFoundHandler(req, res, next) { // eslint-disable-line
+    res.status(404).json({ error: 'Not found' });
+  }
+  
+  function errorHandler(err, req, res, next) { // eslint-disable-line
+    console.error(err);
+  
+    if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
+      return res.status(400).json({ error: 'Invalid json' });
+    }
+    return res.status(500).json({ error: 'Internal server error' });
+  }
   
   // Hjálpar middleware sem athugar hvort notandi sé innskráður og hleypir okkur
   // þá áfram, annars sendir á /login
@@ -56,9 +122,11 @@ import { comparePasswords, findById, findByUsername } from './users.js';
     if (req.isAuthenticated()) {
       return next();
     }
-  
+    app.use(notFoundHandler);
+    app.use(errorHandler);
+
     return res.redirect('/admin/login');
   }
-  
+
   
   export default passport;
