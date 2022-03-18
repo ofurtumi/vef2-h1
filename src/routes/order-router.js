@@ -1,9 +1,15 @@
 import express from 'express';
 import { validationResult } from 'express-validator';
 import { catchErrors } from '../lib/catch-errors.js';
-import { doesExistCart, doesExistSingleOrder, getOrderIfExists, query } from '../lib/db.js';
+import { doesExistCart, doesExistSingleOrder, query, getOrderIfExists } from '../lib/db.js';
+import patch from 'express-ws/lib/add-ws-method.js';
+import { adminConnections } from './user-router.js';
+
+patch.default(express.Router);
 
 export const orderRouter = express.Router();
+
+const orderConnections = new Map();
 
 async function showOrders(req, res) {
 	const q = 'SELECT * FROM orders';
@@ -129,7 +135,18 @@ async function updateOrderStatus(req, res) {
 
 	try {
 		const queryResult = await query(q,[id]);
-		if (queryResult.rows && queryResult.rowCount === 1) return res.send(queryResult.rows);
+		if (queryResult.rows && queryResult.rowCount === 1) { 
+			const connections = orderConnections.get(id);
+			if(connections) {
+				connections.forEach(ws => {
+					ws.send(JSON.stringify(queryResult.rows));
+				});
+			}
+			adminConnections.forEach(ws => {
+				ws.send(JSON.stringify(queryResult.rows));
+			});
+			return res.send(queryResult.rows)
+		}
 		else return res.send({result:'failed to update order status, please check id and try again'})
 	} catch (error) {
 		console.error('error occured while updating order, ' + id + ', status',error);
@@ -137,17 +154,46 @@ async function updateOrderStatus(req, res) {
 	}
 }
 
+async function connectClient(ws, req){
+	const { id } = req.params;
+	console.info('Client connected');
+	// taka linu fyrir ofan ut i endann
+
+	const order = await getOrderIfExists(id);
+
+	console.log(order);
+	if(!order){
+		ws.send("{'error': 'Order not found'}");
+		return ws.close();
+	}
+
+	if(!orderConnections.has(id)) {
+		orderConnections.set(id, new Set());
+	}
+
+	 const newConnections = orderConnections.get(id);
+	 newConnections.add(ws);
+	 orderConnections.set(id. newConnections);
+
+	 ws.on('close', () => {
+		 const filteredConnections = orderConnections.get(id);
+		 filteredConnections.delete(ws);
+		 orderConnections.set(id, filteredConnections);
+	 });
+
+	 return ws.send(JSON.stringify(order));
+}
+
+
 orderRouter.get('/', showOrders);
 orderRouter.post('/', doesExistCart, newOrder, setOrderStatus, fillOrder);
 
 orderRouter.get('/:id', doesExistSingleOrder, showSingleOrder);
 
+orderRouter.ws('/:id', connectClient);
 
 orderRouter.get('/:id/status', doesExistSingleOrder, showOrderStatus);
-orderRouter.patch('/:id/status', doesExistSingleOrder, updateOrderStatus);
-
-orderRouter.get('/:id/status', showOrderStatus);
-orderRouter.patch('/:id/status', updateOrderStatus);
+orderRouter.post('/:id/status', doesExistSingleOrder, updateOrderStatus);
 
 orderRouter.get('/test/:id', async (req,res) => {
 	const { id } = req.params;

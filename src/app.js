@@ -12,8 +12,9 @@ import { cartRouter } from './routes/cart-router.js';
 import cloudinary from 'cloudinary'
 import { imageRouter } from './routes/image-router.js';
 import { orderRouter } from './routes/order-router.js';
-import WebSocket from 'ws';
-// import initWebSocket from './lib/websockets.js';
+import expressWs from 'express-ws';
+import {userRouter} from './routes/user-router.js'
+
 
 dotenv.config();
 
@@ -31,6 +32,8 @@ if (!connectionString || !sessionSecret) {
 }
 
 const app = express();
+
+expressWs(app);
 
 // Sér um að req.body innihaldi gögn úr formi
 app.use(express.urlencoded({ extended: true }));
@@ -59,6 +62,7 @@ app.use('/menu', menuRouter);
 app.use('/categories', categoryRouter);
 app.use('/orders',orderRouter)
 app.use('/image', imageRouter)
+app.use('/user',userRouter)
 app.use('/',(req,res)=>{
 	res.status(201).send({'Title':'Forsíða'})
 })
