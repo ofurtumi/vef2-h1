@@ -2,6 +2,7 @@ import express from 'express';
 import { validationResult } from 'express-validator';
 import { catchErrors } from '../lib/catch-errors.js';
 import { doesExistItem, insertMenuItem, query, selectItemWithId } from '../lib/db.js';
+import { requireAuthentication } from '../lib/login.js';
 
 export const menuRouter = express.Router();
 
@@ -138,5 +139,5 @@ menuRouter.post('/', doesExistItem, catchErrors(newMenuItem));
 menuRouter.get('/', catchErrors(showMenu));
 
 menuRouter.get('/:id', catchErrors(showMenuItem));
-menuRouter.delete('/:id', catchErrors(deleteMenuItem));
-menuRouter.patch('/:id', patchMenuItem);
+menuRouter.delete('/:id', requireAuthentication,catchErrors(deleteMenuItem));
+menuRouter.patch('/:id', requireAuthentication,patchMenuItem);

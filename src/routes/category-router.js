@@ -2,6 +2,7 @@ import express from 'express';
 import { validationResult } from 'express-validator';
 import { catchErrors } from '../lib/catch-errors.js';
 import { doesExistCategory, doesNotExistCategory, query } from '../lib/db.js';
+import { requireAuthentication } from '../lib/login.js';
 
 export const categoryRouter = express.Router();
 
@@ -70,7 +71,7 @@ async function updateCategory(req,res){
 }
 
 categoryRouter.get('/', catchErrors(listCategories));
-categoryRouter.post('/', doesExistCategory, catchErrors(createCategory));
+categoryRouter.post('/', doesExistCategory, requireAuthentication,catchErrors(createCategory));
 
-categoryRouter.delete('/:id', doesNotExistCategory, catchErrors(deleteCategory));
-categoryRouter.patch('/:id', doesExistCategory, updateCategory);
+categoryRouter.delete('/:id', requireAuthentication,doesNotExistCategory, catchErrors(deleteCategory));
+categoryRouter.patch('/:id',doesExistCategory, requireAuthentication,updateCategory);

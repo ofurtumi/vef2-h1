@@ -2,6 +2,7 @@ import express from 'express';
 import { validationResult } from 'express-validator';
 import { catchErrors } from '../lib/catch-errors.js';
 import { doesExistCart, query } from '../lib/db.js';
+import { requireAuthentication } from '../lib/login.js';
 
 export const cartRouter = express.Router();
 
@@ -157,13 +158,13 @@ async function updateCartLine(req, res) {
 	}
 }
 
-cartRouter.get('/', catchErrors(listAllCarts)); // komið
+cartRouter.get('/', requireAuthentication, catchErrors(listAllCarts)); // komið
 cartRouter.post('/', catchErrors(newCart)); // komið
 
 cartRouter.get('/:cartid', doesExistCart, catchErrors(showCart)); // komið
-cartRouter.delete('/:cartid', doesExistCart, catchErrors(deleteCart)); // komið
-cartRouter.post('/:cartid', doesExistCart, catchErrors(addToCart)); // komið
+cartRouter.delete('/:cartid', requireAuthentication,doesExistCart, catchErrors(deleteCart)); // komið
+cartRouter.post('/:cartid', requireAuthentication,doesExistCart, catchErrors(addToCart)); // komið
 
 cartRouter.get('/:cartid/line/:id', doesExistCart, catchErrors(showCartLine)); // komið
-cartRouter.delete('/:cartid/line/:id', doesExistCart, catchErrors(deleteCartLine)); // komið
-cartRouter.patch('/:cartid/line/:id', doesExistCart, catchErrors(updateCartLine)); // komið
+cartRouter.delete('/:cartid/line/:id', requireAuthentication,doesExistCart, catchErrors(deleteCartLine)); // komið
+cartRouter.patch('/:cartid/line/:id', requireAuthentication,doesExistCart, catchErrors(updateCartLine)); // komið
